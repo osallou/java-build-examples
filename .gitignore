@@ -1,3 +1,10 @@
+maven/my-app/target
+ant/build
+ant/dist
+ant/doc
+ant/report
+gradle/my-app/build
+
 # Compiled class file
 *.class
 
