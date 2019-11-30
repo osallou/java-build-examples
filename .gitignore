@@ -5,6 +5,10 @@ ant/doc
 ant/report
 gradle/my-app/build
 
+# reports
+jacoco.exec
+myproject.xml
+
 # Compiled class file
 *.class
 

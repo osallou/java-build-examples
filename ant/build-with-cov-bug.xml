@@ -1,0 +1,134 @@
+<project name="MyProject" default="dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+  <description>
+    simple example build file
+  </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="lib" location="lib"/>
+  <property name="report.dir" location="report" />
+  <property name="test.dir" location="src" />
+  <property name="doc.dir" location="doc" />
+
+  <path id="classpath.test">
+    <pathelement location="/usr/share/java/junit.jar"/>
+    <pathelement location="/usr/share/java/hamcrest/all.jar"/>
+    <pathelement location="${build}"/>
+    <pathelement location="${doc}"/>
+  </path>
+
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+      <classpath path="${lib}/jacocoant.jar"/>
+  </taskdef>
+
+
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    <mkdir dir="${report.dir}"/>
+    <mkdir dir="${report.dir}/raw"/>
+    <mkdir dir="${report.dir}/coverage"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source">
+    <!-- Compile the Java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" debuglevel="lines,source" debug="on"/>
+  </target>
+
+    <target name="junit" depends="compile">
+      <jacoco:coverage>
+        <junit fork="true" forkmode="once" printsummary="yes" haltonfailure="yes" showoutput="yes">
+
+            <!-- Project classpath, must include junit.jar -->
+            <classpath>
+            <path refid="classpath.test"/>
+            </classpath>
+                
+            <batchtest fork="yes" todir="${report.dir}/raw">
+                <formatter type="xml"/>
+                <fileset dir="${test.dir}">
+                    <include name="**/*Test*.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+      </jacoco:coverage>
+    </target>
+
+    <target name="report" depends="junit">
+        <junitreport todir="${report.dir}">
+            <fileset dir="${report.dir}/raw/">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="noframes" todir="${report.dir}\html\" />
+        </junitreport>
+
+
+        <jacoco:report>
+            <executiondata>
+                <file file="jacoco.exec"/>
+            </executiondata>
+
+            <structure name="My Project">
+                <classfiles>
+                    <fileset dir="build"/>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <fileset dir="src"/>
+                </sourcefiles>
+            </structure>
+
+            <html destdir="report/coverage"/>
+
+        </jacoco:report>
+
+
+    </target>
+
+  <!-- Generate javadocs for current project into ${doc.dir} -->
+  <target name="doc" depends="report" description="generate documentation">
+    <javadoc sourcepath="${src}" destdir="${doc.dir}"/>
+  </target>
+
+  <target name="findbugs" depends="compile">
+    <taskdef name="findbugs" classpath="../findbugs-3.0.1/lib/findbugs-ant.jar" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+    <findbugs home="../findbugs-3.0.1"
+              reportLevel="low"
+              output="xml"
+              outputFile="myproject.xml" >
+      <sourcePath path="src" />
+      <auxClasspath  path="/usr/share/java/junit.jar"/>
+      <class location="build" />
+    </findbugs>
+    <findbugs 
+        home="../findbugs-3.0.1"
+        reportLevel="low"
+        output="html"
+        outputFile="report/findbugs.html">
+      <sourcePath path="src"/>
+      <auxClasspath  path="/usr/share/java/junit.jar"/>
+      <class location="build" />
+    </findbugs>
+
+  </target>
+
+  <target name="dist" depends="doc,findbugs"
+        description="generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/lib/myapp-${DSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean"
+        description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
