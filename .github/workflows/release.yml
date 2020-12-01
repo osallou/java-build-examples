@@ -23,6 +23,6 @@ jobs:
       run: cd maven/my-app && mvn -B package --file pom.xml
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "ant/dist/lib/ant.jar,maven/my-app/target/my-app*.jar"
+        artifacts: "ant/dist/lib/*.jar,maven/my-app/target/my-app*.jar"
         body: "a new test release"
         token: ${{ secrets.GITHUB_TOKEN }}
