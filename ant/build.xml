@@ -11,8 +11,8 @@
   <property name="doc.dir" location="doc" />
 
   <path id="classpath.test">
-    <pathelement location="/usr/share/java/junit.jar"/>
-    <pathelement location="/usr/share/java/hamcrest/all.jar"/>
+    <pathelement location="/usr/share/java/junit4.jar"/>
+    <pathelement location="/usr/share/java/hamcrest-all.jar"/>
     <pathelement location="${build}"/>
     <pathelement location="${doc}"/>
   </path>
