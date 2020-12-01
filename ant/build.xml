@@ -61,7 +61,12 @@
 
   <!-- Generate javadocs for current project into ${doc.dir} -->
   <target name="doc" depends="report" description="generate documentation">
-    <javadoc sourcepath="${src}" destdir="${doc.dir}"/>
+	  <javadoc destdir="${doc.dir}">
+		  <fileset dir="${src}" defaultexcludes="yes">
+			  <include name="**/*.java"/>
+                          <exclude name="**/*Test.java"/>	
+	          </fileset>
+          </javadoc> 
   </target>
 
   <target name="dist" depends="doc"
