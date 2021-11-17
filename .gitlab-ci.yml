@@ -6,7 +6,7 @@ build:
   image: openjdk:8-slim-bullseye
   stage: build
   before_script:
-    - yum install hamcrest junit
+    - sudo yum install hamcrest junit
     #   - apt-get -qq update && apt-get install libhamcrest-java junit4
   script:
      - cd ant && ant -noinput -buildfile build.xml
