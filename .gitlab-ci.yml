@@ -3,7 +3,9 @@ stages:
   - build
 
 build:
+  image: openjdk:8-slim-bullseye
   stage: build
-  script:
+  before_script:
      - apt-get -qq update && apt-get install libhamcrest-java junit4
+  script:
      - cd ant && ant -noinput -buildfile build.xml
