@@ -7,6 +7,6 @@ build:
   stage: build
   before_script:
     #- yum install hamcrest junit
-    - apt-get -qq update && apt-get install -y libhamcrest-java junit4
+    - apt-get -qq update && apt-get install -y libhamcrest-java junit4 ant maven gradle
   script:
      - cd ant && ant -noinput -buildfile build.xml
